@@ -18,7 +18,7 @@ export const DOMAIN = 'neoragnar.com'
 
 /** Configurable — wire these to real inboxes/handles when ready. */
 export const CONTACT = {
-  email: `hail@${DOMAIN}`,
+  email: `hello@${DOMAIN}`,
   github: `https://github.com/${GITHUB_USER}`,
   twitter: `https://x.com/${GITHUB_USER}`,
 }

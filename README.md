@@ -80,8 +80,12 @@ the handle, GitHub user, contact email/socials, hero copy, the WHOIS dossier lin
 the disciplines and stats. The palette and motion live in
 [`src/index.css`](src/index.css) under `@theme`.
 
-> The contact email (`hail@neoragnar.com`) and the X handle are placeholders — point
-> them at real inboxes/profiles when ready.
+> Contact email is `hello@neoragnar.com`; all socials point to `@NeoRagnar777`.
+
+## ✦ Production
+
+Live at **[neoragnar.com](https://neoragnar.com)** — static `dist/` served by nginx
+(HTTP→HTTPS, Let's Encrypt TLS, gzip, immutable asset caching, SPA fallback).
 
 ---
 
