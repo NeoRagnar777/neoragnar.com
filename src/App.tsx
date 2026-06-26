@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import { BackgroundFX } from '@/components/fx/BackgroundFX'
 import { BootLoader } from '@/components/BootLoader'
@@ -13,6 +13,7 @@ import { ContactFooter } from '@/components/sections/ContactFooter'
 
 function App() {
   const [booting, setBooting] = useState(true)
+  const handleBootDone = useCallback(() => setBooting(false), [])
 
   // Lock scroll while the boot sequence runs.
   useEffect(() => {
@@ -26,7 +27,7 @@ function App() {
     <>
       <BackgroundFX />
 
-      <AnimatePresence>{booting && <BootLoader key="boot" onComplete={() => setBooting(false)} />}</AnimatePresence>
+      <AnimatePresence>{booting && <BootLoader key="boot" onComplete={handleBootDone} />}</AnimatePresence>
 
       <div className="relative z-10">
         <Navbar />

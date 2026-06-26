@@ -37,6 +37,12 @@ export function BootLoader({ onComplete }: Props) {
   const [exiting, setExiting] = useState(false)
   const doneRef = useRef(false)
 
+  // keep the latest onComplete without re-triggering effects
+  const onCompleteRef = useRef(onComplete)
+  useEffect(() => {
+    onCompleteRef.current = onComplete
+  })
+
   // sequential reveal of boot log lines
   useEffect(() => {
     let i = 0
@@ -64,21 +70,30 @@ export function BootLoader({ onComplete }: Props) {
     return () => window.cancelAnimationFrame(raf)
   }, [])
 
-  // on reaching 100: flash the wordmark, then complete once
-  useEffect(() => {
-    if (count < 100 || doneRef.current) return
+  // flash the wordmark, then complete exactly once (guarded)
+  const finish = () => {
+    if (doneRef.current) return
     doneRef.current = true
     setFlash(true)
-    let exitTimer = 0
-    const flashTimer = window.setTimeout(() => {
+    window.setTimeout(() => {
       setExiting(true)
-      exitTimer = window.setTimeout(onComplete, 360)
+      window.setTimeout(() => onCompleteRef.current(), 360)
     }, FLASH_DURATION)
-    return () => {
-      window.clearTimeout(flashTimer)
-      window.clearTimeout(exitTimer)
-    }
-  }, [count, onComplete])
+  }
+
+  // complete when the counter reaches 100
+  useEffect(() => {
+    if (count >= 100) finish()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [count])
+
+  // safety net: never let the loader hang, even if rAF is throttled
+  // (background tab, reduced paints). Force completion after a hard cap.
+  useEffect(() => {
+    const id = window.setTimeout(finish, COUNT_DURATION + 1500)
+    return () => window.clearTimeout(id)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <AnimatePresence>
